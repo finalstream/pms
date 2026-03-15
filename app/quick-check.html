@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>課業績管理 クイック確認版</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background:#f3f4f6; color:#111827; }
+    .wrap { max-width: 980px; margin: 20px auto; padding: 0 16px; display:grid; gap:12px; }
+    .card { background:#fff; border-radius:10px; padding:14px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+    h1 { margin:0 0 6px; font-size:1.35rem; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap:8px; }
+    label { display:grid; gap:4px; font-weight:600; }
+    input, textarea, button { font: inherit; }
+    input, textarea { border:1px solid #d1d5db; border-radius:8px; padding:8px; }
+    textarea { min-height:60px; }
+    button { border:0; border-radius:8px; padding:8px 12px; background:#2563eb; color:#fff; cursor:pointer; }
+    button.sub { background:#4b5563; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { border-bottom:1px solid #e5e7eb; padding:6px; text-align:left; white-space:nowrap; }
+    .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px; }
+    .kpis div { border:1px solid #e5e7eb; border-radius:8px; padding:8px; }
+    .muted { color:#6b7280; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>課業績管理（HTMLだけで確認）</h1>
+      <p class="muted">この1ファイルだけで動きます。ブラウザで直接開いて確認できます。</p>
+    </div>
+
+    <section class="card">
+      <h2>実績入力</h2>
+      <form id="f">
+        <div class="grid">
+          <label>対象月<input id="m" type="month" required></label>
+          <label>売上<input id="r" type="number" min="0" required></label>
+          <label>原価<input id="c" type="number" min="0" required></label>
+          <label>受注<input id="o" type="number" min="0" required></label>
+          <label>内注<input id="i" type="number" min="0" required></label>
+        </div>
+        <label>メモ<textarea id="n"></textarea></label>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button type="submit">保存</button>
+          <button type="button" class="sub" id="clr">全削除</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>ダッシュボード</h2>
+      <div class="kpis">
+        <div>売上<br><strong id="dr">-</strong></div>
+        <div>原価<br><strong id="dc">-</strong></div>
+        <div>粗利<br><strong id="dg">-</strong></div>
+        <div>粗利率<br><strong id="dm">-</strong></div>
+        <div>受注<br><strong id="do">-</strong></div>
+        <div>内注<br><strong id="di">-</strong></div>
+      </div>
+      <p id="cmp" class="muted">前月比較はデータ登録後に表示されます。</p>
+    </section>
+
+    <section class="card">
+      <h2>履歴</h2>
+      <table>
+        <thead><tr><th>月</th><th>売上</th><th>原価</th><th>粗利</th><th>粗利率</th><th>受注</th><th>内注</th><th>メモ</th></tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    const KEY = 'pms_quick_html_only_v1';
+    const $ = (id)=>document.getElementById(id);
+    const num = (v)=>Number(v||0);
+    const fmt = (v)=>num(v).toLocaleString('ja-JP');
+    const gp = (x)=>num(x.r)-num(x.c);
+    const gm = (x)=>num(x.r)===0?0:gp(x)/num(x.r);
+    const rows = ()=>JSON.parse(localStorage.getItem(KEY)||'[]');
+    const save = (v)=>localStorage.setItem(KEY, JSON.stringify(v));
+
+    function render(){
+      const list = rows().sort((a,b)=>b.m.localeCompare(a.m));
+      const tb = $('tb');
+      tb.innerHTML = list.length ? list.map(x=>`<tr><td>${x.m}</td><td>${fmt(x.r)}</td><td>${fmt(x.c)}</td><td>${fmt(gp(x))}</td><td>${(gm(x)*100).toFixed(1)}%</td><td>${fmt(x.o)}</td><td>${fmt(x.i)}</td><td>${x.n||''}</td></tr>`).join('') : '<tr><td colspan="8" class="muted">データなし</td></tr>';
+
+      if(!list.length){ ['dr','dc','dg','dm','do','di'].forEach(id=>$(id).textContent='-'); $('cmp').textContent='前月比較はデータ登録後に表示されます。'; return; }
+      const a=list[0], b=list[1];
+      $('dr').textContent=fmt(a.r); $('dc').textContent=fmt(a.c); $('dg').textContent=fmt(gp(a)); $('dm').textContent=(gm(a)*100).toFixed(1)+'%'; $('do').textContent=fmt(a.o); $('di').textContent=fmt(a.i);
+      if(!b){ $('cmp').textContent='前月データなし'; return; }
+      const d=num(a.r)-num(b.r), rate=num(b.r)===0?0:d/num(b.r);
+      $('cmp').textContent=`前月比 売上: ${d>=0?'+':''}${fmt(d)} (${(rate*100).toFixed(1)}%)`;
+    }
+
+    $('f').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const rec = { m:$('m').value, r:num($('r').value), c:num($('c').value), o:num($('o').value), i:num($('i').value), n:$('n').value.trim() };
+      const list = rows();
+      const ix = list.findIndex(x=>x.m===rec.m);
+      if(ix>=0) list[ix]=rec; else list.push(rec);
+      save(list); e.target.reset(); render();
+    });
+
+    $('clr').addEventListener('click', ()=>{ if(confirm('全削除しますか？')){ save([]); render(); } });
+    render();
+  </script>
+</body>
+</html>

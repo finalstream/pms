@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>課業績管理 画面モック</title>
+    <link rel="stylesheet" href="./mock.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>課業績管理システム（完成イメージ）</h1>
+        <p>課長1人運用 → 将来全社展開を想定した画面モック</p>
+      </div>
+      <div class="badge">Mock v1</div>
+    </header>
+
+    <main>
+      <section class="screen">
+        <div class="screen-head">
+          <h2>1. ダッシュボード</h2>
+          <span>2026年03月</span>
+        </div>
+
+        <div class="kpi-grid">
+          <article>
+            <h3>売上</h3>
+            <p class="value">¥12,000,000</p>
+            <p class="delta plus">前月比 +8.5%</p>
+          </article>
+          <article>
+            <h3>原価</h3>
+            <p class="value">¥8,500,000</p>
+            <p class="delta minus">前月比 +5.2%</p>
+          </article>
+          <article>
+            <h3>粗利</h3>
+            <p class="value">¥3,500,000</p>
+            <p class="delta plus">前月比 +17.1%</p>
+          </article>
+          <article>
+            <h3>粗利率</h3>
+            <p class="value">29.2%</p>
+            <p class="delta plus">前月比 +2.1pt</p>
+          </article>
+          <article>
+            <h3>受注</h3>
+            <p class="value">18 件</p>
+            <p class="delta plus">前月比 +3 件</p>
+          </article>
+          <article>
+            <h3>内注</h3>
+            <p class="value">6 件</p>
+            <p class="delta">前月比 ±0 件</p>
+          </article>
+        </div>
+
+        <div class="chart-placeholder">月次推移チャート（売上 / 粗利 / 粗利率）</div>
+      </section>
+
+      <section class="screen">
+        <div class="screen-head">
+          <h2>2. 実績入力</h2>
+          <span>入力フォーム</span>
+        </div>
+
+        <div class="form-grid">
+          <label>対象月<input type="month" value="2026-03" disabled /></label>
+          <label>売上<input type="text" value="12000000" disabled /></label>
+          <label>原価<input type="text" value="8500000" disabled /></label>
+          <label>受注<input type="text" value="18" disabled /></label>
+          <label>内注<input type="text" value="6" disabled /></label>
+          <label class="wide">メモ<textarea disabled>大型案件の売上計上あり。原価は外注増加で上振れ。</textarea></label>
+        </div>
+
+        <div class="actions">
+          <button>下書き保存</button>
+          <button class="primary">確定保存</button>
+          <button class="ghost">入力クリア</button>
+        </div>
+      </section>
+
+      <section class="screen">
+        <div class="screen-head">
+          <h2>3. 履歴一覧</h2>
+          <span>CSV / 検索 / 月比較</span>
+        </div>
+
+        <div class="toolbar">
+          <input type="text" value="2026" disabled />
+          <button class="ghost">検索</button>
+          <button class="primary">CSV出力</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>対象月</th>
+              <th>売上</th>
+              <th>原価</th>
+              <th>粗利</th>
+              <th>粗利率</th>
+              <th>受注</th>
+              <th>内注</th>
+              <th>メモ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2026-03</td>
+              <td>12,000,000</td>
+              <td>8,500,000</td>
+              <td>3,500,000</td>
+              <td>29.2%</td>
+              <td>18</td>
+              <td>6</td>
+              <td>大型案件あり</td>
+            </tr>
+            <tr>
+              <td>2026-02</td>
+              <td>11,060,000</td>
+              <td>8,080,000</td>
+              <td>2,980,000</td>
+              <td>27.1%</td>
+              <td>15</td>
+              <td>6</td>
+              <td>通常運用</td>
+            </tr>
+            <tr>
+              <td>2026-01</td>
+              <td>10,450,000</td>
+              <td>7,900,000</td>
+              <td>2,550,000</td>
+              <td>24.4%</td>
+              <td>12</td>
+              <td>5</td>
+              <td>年始稼働低め</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </body>
+</html>
