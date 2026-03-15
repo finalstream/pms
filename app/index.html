@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>課業績管理MVP</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>課業績管理（1人運用MVP）</h1>
+      <p>売上・原価・粗利・受注・内注を月次で管理</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>実績入力</h2>
+        <form id="performance-form">
+          <div class="grid">
+            <label>
+              対象月
+              <input type="month" id="targetMonth" required />
+            </label>
+            <label>
+              売上
+              <input type="number" id="revenue" min="0" step="0.01" required />
+            </label>
+            <label>
+              原価
+              <input type="number" id="cost" min="0" step="0.01" required />
+            </label>
+            <label>
+              受注
+              <input type="number" id="ordersReceived" min="0" step="0.01" required />
+            </label>
+            <label>
+              内注
+              <input type="number" id="internalOrders" min="0" step="0.01" required />
+            </label>
+          </div>
+          <label>
+            メモ
+            <textarea id="note" rows="3" placeholder="特記事項"></textarea>
+          </label>
+          <div class="actions">
+            <button type="submit">保存</button>
+            <button type="button" id="reset-button" class="secondary">入力クリア</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card" id="dashboard">
+        <h2>ダッシュボード</h2>
+        <div class="kpi-grid">
+          <div><span>売上</span><strong id="dashRevenue">-</strong></div>
+          <div><span>原価</span><strong id="dashCost">-</strong></div>
+          <div><span>粗利</span><strong id="dashGrossProfit">-</strong></div>
+          <div><span>粗利率</span><strong id="dashGrossMargin">-</strong></div>
+          <div><span>受注</span><strong id="dashOrders">-</strong></div>
+          <div><span>内注</span><strong id="dashInternal">-</strong></div>
+        </div>
+        <p id="comparison" class="muted">前月データがありません。</p>
+      </section>
+
+      <section class="card">
+        <div class="history-header">
+          <h2>履歴一覧</h2>
+          <div class="actions">
+            <button type="button" id="download-csv" class="secondary">CSV出力</button>
+            <button type="button" id="clear-all" class="danger">全削除</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>対象月</th>
+                <th>売上</th>
+                <th>原価</th>
+                <th>粗利</th>
+                <th>粗利率</th>
+                <th>受注</th>
+                <th>内注</th>
+                <th>メモ</th>
+              </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
